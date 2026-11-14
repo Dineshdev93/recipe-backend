@@ -1,6 +1,7 @@
+require('dotenv').config({ path: '.env.local' })
 const mongoose = require("mongoose");
 const colors = require('colors')
-require("dotenv").config();
+// require("dotenv").config();
 
 const MONGO_URI = process.env.MONGODB_URI;
 

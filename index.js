@@ -9,8 +9,6 @@ const colors = require("colors");
 const port = 8000;
 require("./DB/conn");
 
-
-
 // User routes
 const userRoutes = require("./routes/users/userAuthenticate");
 app.use("/userAuth/api", userRoutes);
