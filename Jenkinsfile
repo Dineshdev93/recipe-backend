@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'nodejs' 
+    }
+
     stages {
         stage('Checkout Code') {
             steps {
@@ -17,7 +21,6 @@ pipeline {
         stage('Run Tests') {
             steps {
                 echo 'Running tests...'
-                // Agar aapke package.json mein test script hai toh niche wali line chala sakte hain:
                 // sh 'npm test'
             }
         }
