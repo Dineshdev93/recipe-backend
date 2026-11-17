@@ -6,7 +6,7 @@ app.use(cors());
 app.use(express.json());
 require("dotenv").config();
 const colors = require("colors");
-const port = 8000;
+const port = process.env.PORT || 8000
 require("./DB/conn");
 
 // User routes
