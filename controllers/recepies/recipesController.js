@@ -46,18 +46,21 @@ exports.updateRecipe = async (req, res) => {
   const { recipename, discription, ingradients, instruction, cookingtime } =
     req.body;
   if (!recipename || !discription || !ingradients || !cookingtime || !file) {
-    res.status(400).json("Please provide all details");
+    return res.status(400).json("Please provide all details");
   }
 
-  var upload;
-
   try {
-    if (file) {
-      upload = await cloudinary.uploader.upload(file);
-    }
+    const upload = await cloudinary.uploader.upload(file);
     const updatedata = await recipeDb.findByIdAndUpdate(
       { _id: id },
-      { recipename, discription, ingradients, instruction, cookingtime },
+      {
+        recipename,
+        discription,
+        ingradients,
+        instruction,
+        cookingtime,
+        recipeImg: upload.secure_url,
+      },
       { new: true }
     );
     res
