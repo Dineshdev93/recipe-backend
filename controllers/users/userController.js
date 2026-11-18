@@ -81,10 +81,25 @@ exports.verifyUSer = async (req, res) => {
 
 // log out api
 exports.logout = async (req, res) => {
-    const authtoken = req.headers.authorization ; 
+  const authToken = req.headers.authorization;
+  if (!authToken) {
+    return res.status(400).json({ error: "Authorization token is required" });
+  }
 
-    const currenttoken = await userDb.find()
-
+  try {
+    const user = await userDb.findOneAndUpdate(
+      { "tokens.token": authToken },
+      { $pull: { tokens: { token: authToken } } },
+      { new: true }
+    );
+    if (!user) {
+      return res.status(404).json({ error: "User or token not found" });
+    }
+    return res.status(200).json({ msg: "Successfully logged out" });
+  } catch (error) {
+    console.error("Logout failed:", error);
+    return res.status(500).json({ error: "Could not log out" });
+  }
 };
 
 // for forgot password  send email

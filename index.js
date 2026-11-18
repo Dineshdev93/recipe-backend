@@ -1,27 +1,23 @@
-// Hello world express server
-const express = require("express");
-const app = express();
-const cors = require("cors");
 
-app.use(cors());
-app.use(express.json());
 require("dotenv").config();
-const colors = require("colors");
-const port = process.env.PORT || 8000
-require("./DB/conn");
+require("dotenv").config({ path: ".env.local" });
 
-// User routes
-const userRoutes = require("./routes/users/userAuthenticate");
-app.use("/userAuth/api", userRoutes);
+const app = require("./app");
+const connectDB = require("./DB/conn");
 
-// recipes routes
-const recipeRoutes = require("./routes/recepies/recipeRoutes");
-app.use("/recipes/api", recipeRoutes);
+const PORT = process.env.PORT || 8000;
 
-// review routes
-const reviewRoutes = require("./routes/reviews/reviewRoute");
-app.use("/review/api", reviewRoutes);
+const startServer = async () => {
+  try {
+    await connectDB();
 
-app.listen(port, () => {
-  console.log(`Server start at port number ${port}`.italic.bgYellow.bold);
-});
+    app.listen(PORT, () => {
+      console.log(`Server started on port ${PORT}`);
+    });
+  } catch (error) {
+    console.error("Server startup failed:", error.message);
+    process.exit(1);
+  }
+};
+
+startServer();

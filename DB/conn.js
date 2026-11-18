@@ -1,20 +1,20 @@
-require('dotenv').config({ path: '.env.local' })
+
 const mongoose = require("mongoose");
-const colors = require('colors')
-// require("dotenv").config();
 
-const MONGO_URI = process.env.MONGODB_URI;
+const connectDB = async () => {
+  const MONGO_URI = process.env.MONGODB_URI;
 
-  mongoose
-  .connect(MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log(`MongoDb connected successfully`.bgBlue);
-  })
-  .catch((error) => {
-    console.log(`conection error ${error}`);
-  });
+  if (!MONGO_URI) {
+    throw new Error("MONGODB_URI is missing");
+  }
 
- 
+  try {
+    await mongoose.connect(MONGO_URI);
+    console.log("MongoDB connected successfully");
+  } catch (error) {
+    console.error("MongoDB connection failed:", error.message);
+    throw error;
+  }
+};
+
+module.exports = connectDB;
