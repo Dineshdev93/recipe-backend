@@ -1,27 +1,26 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'nodejs' 
-    }
-
     stages {
-        stage('Checkout Code') {
+        stage('Checkout') {
             steps {
-                echo 'Code successfully fetched from GitHub!'
+                echo 'Code fetched from GitHub dev branch'
             }
         }
 
-        stage('Install Dependencies') {
+        stage('Deploy to AWS Staging') {
             steps {
-                sh 'npm install'
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                echo 'Running tests...'
-                // sh 'npm test'
+                withCredentials([file(credentialsId: 'aws-staging-pem', variable: 'PEM_KEY')]) {
+                    sh '''
+                        chmod 400 $PEM_KEY
+                        ssh -o StrictHostKeyChecking=no -i $PEM_KEY ubuntu@3.25.139.144 "
+                            cd ~/recipe-backend &&
+                            git pull origin dev &&
+                            npm install &&
+                            pm2 restart recipe-staging
+                        "
+                    '''
+                }
             }
         }
     }
