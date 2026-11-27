@@ -1,0 +1,13 @@
+services:
+  recipe-backend-api:
+    build: .
+    image: dineshboss/recipe-backend:v1
+    container_name: recipe-backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env.local
+    volumes:
+      - .:/app
+      - /app/node_modules
+    command: npm run dev
